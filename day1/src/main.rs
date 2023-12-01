@@ -6,8 +6,7 @@ fn get_calibration_value_one(reader: BufReader<File>) -> u32 {
 
   for line in reader.lines().flatten() {
     let numbers = line.chars()
-      .filter(|c| c.is_numeric())
-      .map(|c| c.to_digit(10).unwrap())
+      .filter_map(|c| c.to_digit(10))
       .collect::<Vec<u32>>();
     let a = numbers.first().unwrap();
     let b = numbers.last().unwrap();
@@ -24,8 +23,7 @@ fn get_calibration_value_two(reader: BufReader<File>) -> u32 {
   for line in reader.lines().flatten() {
     let numbers = line.chars()
       .enumerate()
-      .filter(|(_, c)| c.is_numeric())
-      .map(|(i, c)| (i, c.to_digit(10).unwrap()))
+      .filter_map(|(i, c)| c.to_digit(10).map(|d| (i, d)))
       .collect::<Vec<(usize, u32)>>();
     let str_first_indices = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"].iter()
       .map(|s| line.find(s))
@@ -45,7 +43,7 @@ fn get_calibration_value_two(reader: BufReader<File>) -> u32 {
         }
       }
       match numbers.first() {
-        Some(n) if n.0 < i => n.1,
+        Some((j, a)) if *j < i => *a,
         _ => a as u32
       }
     };
@@ -61,7 +59,7 @@ fn get_calibration_value_two(reader: BufReader<File>) -> u32 {
         }
       }
       match numbers.last() {
-        Some(n) if n.0 >= i => n.1,
+        Some((j, b)) if *j >= i => *b,
         _ => b as u32
       }
     };
