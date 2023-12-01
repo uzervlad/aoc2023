@@ -1,7 +1,6 @@
-#![allow(dead_code, unused)]
-
 use std::{fs::File, io::{BufReader, BufRead}};
 
+#[allow(dead_code)]
 fn get_calibration_value_one(reader: BufReader<File>) -> u32 {
   let mut calibration_value = 0u32;
 
@@ -18,14 +17,14 @@ fn get_calibration_value_one(reader: BufReader<File>) -> u32 {
   calibration_value
 }
 
+#[allow(dead_code)]
 fn get_calibration_value_two(reader: BufReader<File>) -> u32 {
   let mut calibration_value = 0u32;
 
   for line in reader.lines().flatten() {
-    let mut chars = line.chars();
     let numbers = line.chars()
       .enumerate()
-      .filter(|(i, c)| c.is_numeric())
+      .filter(|(_, c)| c.is_numeric())
       .map(|(i, c)| (i, c.to_digit(10).unwrap()))
       .collect::<Vec<(usize, u32)>>();
     let str_first_indices = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"].iter()
