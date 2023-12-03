@@ -68,8 +68,8 @@ fn get_sum_two(input: &str) -> u32 {
     for (y, ch) in line.chars().enumerate() {
       if ch.is_numeric() {
         part = part * 10 + ch.to_digit(10).unwrap();
-        if let Some(g) = gears.iter().enumerate().find(|(_, g)| include(g.coords, (x, y))) {
-          gear = Some(g.0);
+        if let Some((idx, _)) = gears.iter().enumerate().find(|(_, g)| include(g.coords, (x, y))) {
+          gear = Some(idx);
         }
       } else {
         if let Some(gear) = gear {
