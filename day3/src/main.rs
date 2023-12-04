@@ -11,7 +11,7 @@ fn get_sum_one(input: &str) -> u32 {
 
   for (x, line) in input.lines().enumerate() {
     for (y, ch) in line.chars().enumerate() {
-      if !ch.is_numeric() && ch != '.' {
+      if !ch.is_ascii_digit() && ch != '.' {
         symbols.push((x, y));
       }
     }
@@ -22,7 +22,7 @@ fn get_sum_one(input: &str) -> u32 {
     let mut included = false;
 
     for (y, ch) in line.chars().enumerate() {
-      if ch.is_numeric() {
+      if ch.is_ascii_digit() {
         part = part * 10 + ch.to_digit(10).unwrap();
         if symbols.iter().any(|s| include(*s, (x, y))) {
           included = true;
@@ -66,7 +66,7 @@ fn get_sum_two(input: &str) -> u32 {
     let mut gear: Option<usize> = None;
 
     for (y, ch) in line.chars().enumerate() {
-      if ch.is_numeric() {
+      if ch.is_ascii_digit() {
         part = part * 10 + ch.to_digit(10).unwrap();
         if let Some((idx, _)) = gears.iter().enumerate().find(|(_, g)| include(g.coords, (x, y))) {
           gear = Some(idx);
