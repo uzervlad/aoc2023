@@ -38,12 +38,46 @@ fn min_one(seeds: &Vec<u64>, maps: &Vec<Vec<Map>>) -> u64 {
     .min().unwrap()
 }
 
+fn intersect(a: &Range<u64>, b: &Range<u64>) -> Range<u64> {
+  a.start.max(b.start)..a.end.min(b.end)
+}
+
+fn map_seed_range(seeds: Range<u64>, maps: &Vec<Vec<Map>>) -> u64 {
+  let mut ranges = vec![seeds];
+
+  for map in maps {
+    let mut new_ranges = vec![];
+
+    for mut range in ranges {
+      for map_range in map {
+        let i = intersect(&range, &map_range.src);
+        if i.is_empty() {
+          continue
+        }
+        if i.start > range.start {
+          new_ranges.push(range.start..i.start);
+        }
+        range.start = i.end;
+        new_ranges.push(map_range.map(i.start).unwrap()..map_range.map(i.end-1).unwrap()+1);
+      }
+      if !range.is_empty() {
+        new_ranges.push(range);
+      }
+    }
+
+    ranges = new_ranges;
+  }
+
+  ranges.iter()
+    .map(|r| r.start)
+    .min()
+    .unwrap_or(u64::MAX)
+}
+
 fn min_two(seeds: &Vec<u64>, maps: &Vec<Vec<Map>>) -> u64 {
   seeds.chunks(2)
     .map(|c| c[0]..c[0]+c[1])
-    .flatten()
-    .into_iter()
-    .map(|s| map_seed(s, maps))
+    .map(|r| map_seed_range(r, maps))
     .min()
     .unwrap()
 }
@@ -62,6 +96,9 @@ fn main() {
 
   for line in lines {
     if line.ends_with("map:") {
+      if maps.len() > 0 {
+        maps.last_mut().unwrap().sort_by(|a, b| a.src.start.cmp(&b.src.start));
+      }
       maps.push(Vec::new())
     } else if !line.is_empty() {
       let n: Vec<u64> = line.split(" ").flat_map(|s| s.parse::<u64>()).collect();
