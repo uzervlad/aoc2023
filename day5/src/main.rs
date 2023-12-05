@@ -44,11 +44,10 @@ fn intersect(a: &Range<u64>, b: &Range<u64>) -> Range<u64> {
 
 fn map_seed_range(seeds: Range<u64>, maps: &Vec<Vec<Map>>) -> u64 {
   let mut ranges = vec![seeds];
+  let mut new_ranges = vec![];
 
   for map in maps {
-    let mut new_ranges = vec![];
-
-    for mut range in ranges {
+    for range in ranges.iter_mut() {
       for map_range in map {
         let i = intersect(&range, &map_range.src);
         if i.is_empty() {
@@ -61,11 +60,13 @@ fn map_seed_range(seeds: Range<u64>, maps: &Vec<Vec<Map>>) -> u64 {
         new_ranges.push(map_range.map(i.start).unwrap()..map_range.map(i.end-1).unwrap()+1);
       }
       if !range.is_empty() {
-        new_ranges.push(range);
+        new_ranges.push(range.clone());
       }
     }
 
-    ranges = new_ranges;
+    ranges.clear();
+    ranges.append(&mut new_ranges);
+    new_ranges.clear();
   }
 
   ranges.iter()
