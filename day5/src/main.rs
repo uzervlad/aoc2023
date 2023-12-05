@@ -111,10 +111,7 @@ fn main() {
   }
 
   let one = min_one(&seeds, &maps);
-  let s = Instant::now();
   let two = min_two(&seeds, &maps);
-  let e = s.elapsed();
-  println!("{}", e.as_micros());
   
   println!("Part One: {}", one);
   println!("Part Two: {}", two);
