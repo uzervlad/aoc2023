@@ -1,4 +1,6 @@
-use std::{ops::Range, fs};
+use std::{ops::Range, fs, time::Instant};
+
+use rayon::{slice::ParallelSlice, iter::ParallelIterator};
 
 struct Map {
   src: Range<u64>,
@@ -76,7 +78,7 @@ fn map_seed_range(seeds: Range<u64>, maps: &Vec<Vec<Map>>) -> u64 {
 }
 
 fn min_two(seeds: &Vec<u64>, maps: &Vec<Vec<Map>>) -> u64 {
-  seeds.chunks(2)
+  seeds.par_chunks(2)
     .map(|c| c[0]..c[0]+c[1])
     .map(|r| map_seed_range(r, maps))
     .min()
@@ -109,7 +111,10 @@ fn main() {
   }
 
   let one = min_one(&seeds, &maps);
+  let s = Instant::now();
   let two = min_two(&seeds, &maps);
+  let e = s.elapsed();
+  println!("{}", e.as_micros());
   
   println!("Part One: {}", one);
   println!("Part Two: {}", two);
