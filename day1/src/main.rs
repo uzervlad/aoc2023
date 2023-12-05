@@ -1,9 +1,9 @@
 use std::fs;
 
-fn get_calibration_value_one(reader: &str) -> u32 {
+fn get_calibration_value_one(input: &str) -> u32 {
   let mut calibration_value = 0u32;
 
-  for line in reader.lines() {
+  for line in input.lines() {
     let numbers = line.chars()
       .filter_map(|c| c.to_digit(10))
       .collect::<Vec<u32>>();
@@ -15,10 +15,10 @@ fn get_calibration_value_one(reader: &str) -> u32 {
   calibration_value
 }
 
-fn get_calibration_value_two(reader: &str) -> u32 {
+fn get_calibration_value_two(input: &str) -> u32 {
   let mut calibration_value = 0u32;
 
-  for line in reader.lines() {
+  for line in input.lines() {
     let numbers = line.chars()
       .enumerate()
       .filter_map(|(i, c)| c.to_digit(10).map(|d| (i, d)))
