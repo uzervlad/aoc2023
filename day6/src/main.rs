@@ -15,18 +15,14 @@ fn part_one(input: &str) -> u32 {
 
   let races = zip(times, distances);
 
-  let mut mul = 1;
-
-  for race in races {
-    for i in 1..race.0 {
-      if i * (race.0 - i) > race.1 {
-        mul *= race.0 - i * 2 + 1;
-        break
+  races.map(|r| {
+    for i in 1..r.0 {
+      if i * (r.0 - i) > r.1 {
+        return r.0 - i * 2 + 1
       }
     }
-  }
-
-  mul
+    0
+  }).product()
 }
 
 fn part_two(input: &str) -> u64 {
