@@ -1,17 +1,17 @@
 use std::{fs, iter::zip};
 
-fn part_one(input: &str) -> u32 {
+fn part_one(input: &str) -> u64 {
   let mut lines = input.lines();
 
   let times = lines.next().unwrap()
-    .split_once(":").unwrap()
-    .1.split(" ").filter(|s| !s.is_empty())
-    .flat_map(|s| s.parse::<u32>());
+    .split_once(':').unwrap()
+    .1.split(' ').filter(|s| !s.is_empty())
+    .flat_map(str::parse);
 
   let distances = lines.next().unwrap()
-    .split_once(":").unwrap()
-    .1.split(" ").filter(|s| !s.is_empty())
-    .flat_map(|s| s.parse::<u32>());
+    .split_once(':').unwrap()
+    .1.split(' ').filter(|s| !s.is_empty())
+    .flat_map(str::parse);
 
   let races = zip(times, distances);
 
@@ -29,12 +29,12 @@ fn part_two(input: &str) -> u64 {
   let mut lines = input.lines();
 
   let time = lines.next().unwrap()
-    .split_once(":").unwrap()
-    .1.replace(" ", "").trim().parse::<u64>().unwrap();
+    .split_once(':').unwrap()
+    .1.replace(' ', "").trim().parse::<u64>().unwrap();
 
   let distance = lines.next().unwrap()
-    .split_once(":").unwrap()
-    .1.replace(" ", "").trim().parse::<u64>().unwrap();
+    .split_once(':').unwrap()
+    .1.replace(' ', "").trim().parse::<u64>().unwrap();
 
   for i in 1..time {
     if i * (time - i) > distance {
