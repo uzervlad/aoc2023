@@ -36,13 +36,19 @@ fn part_two(input: &str) -> u64 {
     .split_once(':').unwrap()
     .1.replace(' ', "").trim().parse::<u64>().unwrap();
 
-  for i in 1..time {
-    if i * (time - i) > distance {
-      return time - i * 2 + 1
-    }
-  }
+  // solve quadratic equation
+  // -x^2 + time*x - distance = 0
+  let root = {
+    let b = time as f64;
+    let c = -(distance as f64);
+    let d = b * b + 4. * c;
+    let sq = d.sqrt();
+    let (same_sign, diff_sign) = (-b - sq, -b + sq);
+    let cx2 = 2. * c;
+    (cx2 / same_sign).min(cx2 / diff_sign)
+  };
 
-  0
+  time - root.ceil().max(0.) as u64 * 2 + 1
 }
 
 fn main() {
