@@ -1,4 +1,6 @@
-use std::{fs, cmp::Ordering, collections::HashMap};
+use std::{fs, cmp::Ordering, collections::HashMap, time::Instant};
+
+use itertools::Itertools;
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 enum HandType {
@@ -13,6 +15,7 @@ enum HandType {
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy, PartialOrd, Ord, Hash)]
 enum HandCard {
+  J,
   N2,
   N3,
   N4,
@@ -22,7 +25,6 @@ enum HandCard {
   N8,
   N9,
   T,
-  J,
   Q,
   K,
   A
@@ -57,7 +59,6 @@ struct Hand {
 }
 
 fn main() {
-  // let cards = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'].map(|c| HandCard::from(c));
   let input = fs::read_to_string("./input").unwrap();
 
   let mut hands: Vec<Hand> = input.lines()
@@ -65,23 +66,26 @@ fn main() {
       let (hand, bid) = line.split_once(" ").unwrap();
       let hand_vals: Vec<HandCard> = hand.chars().map(|c| HandCard::from(c)).collect();
       let mut hand_map: HashMap<HandCard, usize> = HashMap::new();
+      let mut jokers = 0;
       for card in hand_vals.iter() {
-        hand_map.entry(*card).and_modify(|v| *v += 1).or_insert(1);
-      }
-      let hand_type = if hand_map.iter().any(|(_, v)| *v == 5) {
-        HandType::FiveOfAKind
-      } else if hand_map.iter().any(|(_, v)| *v == 4) {
-        HandType::FourOfAKind
-      } else if hand_map.iter().any(|(_, v)| *v == 3) {
-        if hand_map.iter().any(|(_, v)| *v == 2) {
-          HandType::FullHouse
-        } else {
-          HandType::ThreeOfAKind
+        match card {
+          HandCard::J => jokers += 1,
+          _ => {
+            hand_map.entry(*card).and_modify(|v| *v += 1).or_insert(1);
+          }
         }
-      } else {
-        match hand_map.iter().filter(|(_, v)| **v == 2).count() {
-          2 => HandType::TwoPair,
-          1 => HandType::OnePair,
+      }
+      let hand_type: HandType = {
+        let vals: Vec<usize> = hand_map.into_iter().map(|(_, c)| c).sorted().rev().take(2).collect();
+        let first = vals.get(0).unwrap_or(&0);
+        let second = vals.get(1).unwrap_or(&0);
+        match (*first + jokers, *second) {
+          (5, _) => HandType::FiveOfAKind,
+          (4, _) => HandType::FourOfAKind,
+          (3, 2) => HandType::FullHouse,
+          (3, _) => HandType::ThreeOfAKind,
+          (2, 2) => HandType::TwoPair,
+          (2, _) => HandType::OnePair,
           _ => HandType::HighCard
         }
       };
@@ -109,5 +113,5 @@ fn main() {
     .map(|(i, hand)| hand.bid * (hands.len() - i) as u32)
     .sum::<u32>();
 
-  println!("Part One: {}", winnings);
+  println!("Part Two: {}", winnings);
 }
