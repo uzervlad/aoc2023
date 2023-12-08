@@ -51,10 +51,10 @@ fn main() {
   let nodes: HashMap<&str, (&str, &str)> = lines
     .filter(|l| !l.is_empty())
     .map(|line| {
-      let (node, branches) = line.split_once(" = ").unwrap();
-      let pat: &[_] = &['(', ')'];
-      let branches = branches.trim_matches(pat).split_once(", ").unwrap();
-      (node, branches)
+      let node = &line[0..3];
+      let branch_a = &line[7..10];
+      let branch_b = &line[12..15];
+      (node, (branch_a, branch_b))
     })
     .collect();
 
