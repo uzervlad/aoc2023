@@ -1,4 +1,5 @@
-use std::{fs, collections::HashMap};
+use std::fs;
+use hashbrown::HashMap;
 
 fn solve_node(start: &str, nodes: &HashMap<&str, (&str, &str)>, steps: &Vec<char>) -> u64 {
   let l = steps.len() as u64;
