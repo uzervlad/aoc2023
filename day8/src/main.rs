@@ -16,7 +16,7 @@ fn solve_node(start: &str, nodes: &HashMap<&str, (&str, &str)>, steps: &Vec<char
 
     taken += 1;
 
-    if current_node.ends_with('Z') {
+    if current_node.as_bytes()[2] == b'Z' {
       break
     }
   }
@@ -30,7 +30,7 @@ fn part_one(nodes: &HashMap<&str, (&str, &str)>, steps: &Vec<char>) -> u64 {
 
 fn part_two(nodes: &HashMap<&str, (&str, &str)>, steps: &Vec<char>) -> u64 {
   let factors: Vec<u64> = nodes.keys()
-    .filter(|n| n.ends_with('A'))
+    .filter(|n| n.as_bytes()[2] == b'A')
     .map(|n| solve_node(*n, nodes, steps))
     .collect();
 
