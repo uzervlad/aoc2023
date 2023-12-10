@@ -13,3 +13,5 @@ I might come back to these later and improve the solutions, but no guarantees
 Day 5 has a [separate branch](https://github.com/uzervlad/aoc2023/tree/day5-rayon) that parallelizes range calculations
 
 Day 7 is available on a [separate branch](https://github.com/uzervlad/aoc2023/tree/day7) for *reasons*
+
+Day 10 is available on a [separate branch](https://github.com/uzervlad/aoc2023/tree/day10) because the code is fucking horrific
